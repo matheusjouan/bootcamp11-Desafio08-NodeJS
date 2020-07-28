@@ -6,20 +6,36 @@ import {
   ManyToOne,
   JoinColumn,
   OneToMany,
+  Column,
 } from 'typeorm';
 
 import Customer from '@modules/customers/infra/typeorm/entities/Customer';
 import OrdersProducts from '@modules/orders/infra/typeorm/entities/OrdersProducts';
 
+@Entity('orders')
 class Order {
+  @PrimaryGeneratedColumn('uuid')
   id: string;
 
+  // Várias orders pode ter um customer
+  @ManyToOne(() => Customer)
+  @JoinColumn({ name: 'customer_id' })
   customer: Customer;
 
+  /**
+   * OrdersProducts => Entidade que se relaciona
+   * order_products => apelido
+   * order_products.order => acessar os dados de order, na Tabela OrdersProducts
+   */
+  @OneToMany(() => OrdersProducts, order_products => order_products.order, {
+    cascade: true,
+  })
   order_products: OrdersProducts[];
 
+  @CreateDateColumn()
   created_at: Date;
 
+  @UpdateDateColumn()
   updated_at: Date;
 }
 
