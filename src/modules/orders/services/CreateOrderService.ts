@@ -44,7 +44,7 @@ class CreateOrderService {
       throw new AppError('Could not find any products with the given ids');
     }
 
-    // Verifica se algum produto não existe
+    // Verifica se algum produto específico não existe
 
     // Retorna um array com os IDs dos produtos que existem
     const existentProductsIds = existentProducts.map(product => product.id);
