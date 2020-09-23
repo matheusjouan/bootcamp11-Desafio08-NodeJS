@@ -72,8 +72,8 @@ jobs:
           cd ~/app/node-deploy
           yarn
           
-      # Executar as migrations do TypeORM
-      - name: Run migrations on Digital Ocean
+      # Executar as migrations do TypeORM e Resart Servidor Node
+      - name: Run migrations on Digital Ocean and Restart Node Server
         uses: appleboy/ssh-action@master
         with:
          host: ${{ secrets.SSH_HOST }}
@@ -81,18 +81,8 @@ jobs:
          port: ${{ secrets.SSH_PORT }}
          key: ${{ secrets.SSH_KEY }}
          # script: é o que ele vai executar (acesso a pasta / execução migration)
+         # Passar o nomeServicoDado ou id na hora da criçao do PM2
          script: | 
           cd ~/app/node-deploy
           ./node_modules/.bin/typeorm migration:run
-          
-      # Restart no servidor NodeJS
-      - name: Restart Digital Ocean NodeJS Server
-        uses: appleboy/ssh-action@master
-        with:
-         host: ${{ secrets.SSH_HOST }}
-         username: ${{ secrets.SSH_USER }}
-         port: ${{ secrets.SSH_PORT }}
-         key: ${{ secrets.SSH_KEY }}
-         # Passar o nomeServicoDado ou id na hora da criçao do PM2
-         script: pm2 restart nomeServicoDado
-
+          pm2 restart nomeServicoDado
